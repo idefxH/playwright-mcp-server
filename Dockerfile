@@ -6,12 +6,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl && \
     apt-get install -y --no-install-recommends nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install mcp-proxy (Python) and @playwright/mcp
-# Force playwright@1.58.2 to match browserless chromium:latest
+# Install mcp-proxy (Python) and @playwright/mcp@0.0.56
+# Pinned to 0.0.56 = last version using Playwright 1.58 (matches browserless chromium:latest)
+# When upgrading browserless to Playwright 1.59+, bump to @playwright/mcp@0.0.57+
 RUN pip install --no-cache-dir mcp-proxy && \
-    npm install -g @playwright/mcp@latest && \
-    cd /usr/lib/node_modules/@playwright/mcp && \
-    npm install playwright@1.58.2 --save
+    npm install -g @playwright/mcp@0.0.56
 
 EXPOSE 3000
 
