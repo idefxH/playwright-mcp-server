@@ -1,9 +1,17 @@
-FROM node:22-slim
+FROM python:3.12-slim
 
-RUN npm install -g supergateway @playwright/mcp@latest
+# Install Node.js (required for @playwright/mcp)
+RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install mcp-proxy (Python) and @playwright/mcp (Node.js)
+RUN pip install --no-cache-dir mcp-proxy && \
+    npm install -g @playwright/mcp@latest
 
 EXPOSE 3000
 
 ENV CDP_ENDPOINT=ws://browserless:3000/playwright/chromium
 
-CMD sh -c 'supergateway --stdio "npx -y @playwright/mcp@latest --cdp-endpoint $CDP_ENDPOINT" --port 3000 --host 0.0.0.0'
+CMD ["sh", "-c", "mcp-proxy --pass-environment --host 0.0.0.0 --port 3000 -- npx -y @playwright/mcp@latest --cdp-endpoint $CDP_ENDPOINT"]
