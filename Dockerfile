@@ -16,4 +16,4 @@ EXPOSE 3000
 
 ENV CDP_ENDPOINT=ws://browserless:3000/playwright/chromium
 
-CMD ["sh", "-c", "mcp-proxy --pass-environment --host 0.0.0.0 --port 3000 -- npx @playwright/mcp --cdp-endpoint $CDP_ENDPOINT"]
+CMD ["sh", "-c", "mcp-proxy --pass-environment --host 0.0.0.0 --port 3000 -- npx @playwright/mcp@0.0.56 --cdp-endpoint $CDP_ENDPOINT"]
